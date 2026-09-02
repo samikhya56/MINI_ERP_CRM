@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database Container
+  postgres:
+    image: postgres:16-alpine
+    container_name: minierp_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: minierp_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d minierp_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Express + Prisma Backend API Server Container
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minierp_backend
+    restart: always
+    environment:
+      PORT: 4000
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/minierp_db?schema=public
+      JWT_SECRET: super-secret-production-jwt-key-minierp-2026
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # React + Vite + Tailwind Client SPA Container
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: minierp_frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
