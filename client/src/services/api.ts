@@ -226,17 +226,18 @@ export const api = {
       if (res.ok && data.success) {
         return data.data;
       }
+      throw new Error(data.error || data.message || 'Invalid email or password');
     } catch {
-      console.warn('Backend server offline. Using fallback authentication mode.');
+      if (!import.meta.env.DEV) {
+        throw new Error('Unable to connect to the authentication service.');
+      }
     }
 
-    // Fallback Mock Login
-    const matchedUser = mockUsers.find((u) => u.email.toLowerCase() === email.toLowerCase()) || {
-      id: 'usr-demo',
-      name: email.split('@')[0].toUpperCase(),
-      email,
-      role: 'Admin' as const,
-    };
+    // Development-only fallback for documented demo accounts.
+    const matchedUser = mockUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
+    if (!matchedUser || password !== 'Password@123') {
+      throw new Error('Invalid email or password');
+    }
 
     return {
       token: `demo-token-${Date.now()}`,

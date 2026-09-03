@@ -5,16 +5,17 @@ import {
   getChallanById,
   updateChallanStatus,
 } from '../controllers/challan.controller';
-import { authenticateToken } from '../middleware/auth';
+import { Role } from '@prisma/client';
+import { authenticateToken, requireRoles } from '../middleware/auth';
 
 const router = Router();
 
 // Protect all sales challan routes with authentication middleware
 router.use(authenticateToken);
 
-router.post('/', createChallan);
+router.post('/', requireRoles([Role.Admin, Role.Sales]), createChallan);
 router.get('/', getChallans);
 router.get('/:id', getChallanById);
-router.patch('/:id/status', updateChallanStatus);
+router.patch('/:id/status', requireRoles([Role.Admin, Role.Sales]), updateChallanStatus);
 
 export default router;

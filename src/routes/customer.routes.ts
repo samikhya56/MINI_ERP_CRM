@@ -6,7 +6,8 @@ import {
   updateCustomer,
   addCustomerNote,
 } from '../controllers/customer.controller';
-import { authenticateToken } from '../middleware/auth';
+import { Role } from '@prisma/client';
+import { authenticateToken, requireRoles } from '../middleware/auth';
 
 const router = Router();
 
@@ -14,10 +15,10 @@ const router = Router();
 router.use(authenticateToken);
 
 // Customer CRM Endpoints
-router.post('/', createCustomer);
+router.post('/', requireRoles([Role.Admin, Role.Sales]), createCustomer);
 router.get('/', getCustomers);
 router.get('/:id', getCustomerById);
-router.put('/:id', updateCustomer);
-router.post('/:id/notes', addCustomerNote);
+router.put('/:id', requireRoles([Role.Admin, Role.Sales]), updateCustomer);
+router.post('/:id/notes', requireRoles([Role.Admin, Role.Sales]), addCustomerNote);
 
 export default router;
