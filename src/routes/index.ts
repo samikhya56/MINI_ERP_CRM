@@ -7,6 +7,16 @@ import challanRoutes from './challan.routes';
 
 const router = Router();
 
+// API root information endpoint
+router.get('/', (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    service: 'Mini ERP/CRM API',
+    version: 'v1',
+    health: '/api/v1/health',
+  });
+});
+
 // Health & System Status Endpoint
 router.get('/health', async (req: Request, res: Response) => {
   try {
