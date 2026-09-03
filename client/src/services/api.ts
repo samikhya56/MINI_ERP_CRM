@@ -12,6 +12,13 @@ import type {
 // VITE_API_BASE_URL to the public URL of the deployed backend.
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
+// Prisma serializes Decimal columns as strings in JSON responses. Keep the
+// browser model consistent so price formatting and calculations are safe.
+const normalizeProduct = (product: Product): Product => ({
+  ...product,
+  unitPrice: Number(product.unitPrice) || 0,
+});
+
 const getAuthHeaders = () => {
   const token = localStorage.getItem('erp_token');
   return {
@@ -393,7 +400,10 @@ export const api = {
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        return { data: data.data as Product[], pagination: data.pagination as Pagination };
+        return {
+          data: (data.data as Product[]).map(normalizeProduct),
+          pagination: data.pagination as Pagination,
+        };
       }
     } catch {
       // Fallback
@@ -430,7 +440,7 @@ export const api = {
         body: JSON.stringify(productData),
       });
       const data = await res.json();
-      if (res.ok && data.success) return data.data;
+      if (res.ok && data.success) return normalizeProduct(data.data as Product);
       if (!res.ok && data.error) throw new Error(data.error);
     } catch (err) {
       if (err instanceof Error && err.message.includes('SKU')) throw err;

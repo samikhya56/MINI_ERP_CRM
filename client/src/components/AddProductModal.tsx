@@ -10,8 +10,6 @@ interface Props {
 }
 
 export const AddProductModal: React.FC<Props> = ({ isOpen, onClose, onProductCreated }) => {
-  if (!isOpen) return null;
-
   const [formData, setFormData] = useState({
     name: '',
     sku: '',
@@ -24,6 +22,8 @@ export const AddProductModal: React.FC<Props> = ({ isOpen, onClose, onProductCre
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

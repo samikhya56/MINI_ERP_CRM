@@ -9,12 +9,16 @@ interface Props {
 }
 
 export const StockHistoryDrawer: React.FC<Props> = ({ product, onClose }) => {
-  if (!product) return null;
-
   const [movements, setMovements] = useState<StockMovement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!product) {
+      setMovements([]);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     api
       .getProductMovements(product.id)
@@ -23,6 +27,8 @@ export const StockHistoryDrawer: React.FC<Props> = ({ product, onClose }) => {
       .catch(() => setMovements([]))
       .finally(() => setIsLoading(false));
   }, [product]);
+
+  if (!product) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-sm flex justify-end">
