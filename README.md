@@ -4,6 +4,27 @@ A complete, production-ready full-stack **Mini ERP/CRM System** built with **Nod
 
 Includes **JWT Authentication**, **Role-Based Access Control (RBAC)** across 4 roles (`Admin`, `Sales`, `Warehouse`, `Accounts`), **Customer Relationship CRM**, **Product Inventory Monitoring**, and **Sales Challan Lifecycle Management** featuring **Prisma Interactive Transactions** for zero-race-condition stock deduction.
 
+## Submission links
+
+- **Source code:** [GitHub repository](https://github.com/samikhya56/MINI_ERP_CRM)
+- **Live backend health check:** [Render API health](https://mini-erp-backend-g6dc.onrender.com/api/v1/health)
+- **API documentation:** [docs/API.md](docs/API.md)
+- **Live frontend:** Add the Render Static Site URL here after its deployment completes.
+
+## Deployment notes
+
+The backend is deployed as a Render Node Web Service and uses Render PostgreSQL through the `DATABASE_URL` environment variable. The frontend is deployed separately as a Render Static Site. It is built with `VITE_API_BASE_URL` set to the backend's `/api/v1` URL.
+
+Required backend environment variables are `NODE_ENV`, `DATABASE_URL`, and `JWT_SECRET`. The frontend only requires `VITE_API_BASE_URL`; database credentials and JWT secrets must never be exposed in the frontend.
+
+## Architecture and known limitations
+
+- React/Vite frontend communicates with the Express REST API over HTTPS.
+- Express controllers use Prisma to access PostgreSQL; Prisma validates the sales-challan stock transaction.
+- Authentication uses signed JWTs and the UI enforces the Admin, Sales, Warehouse, and Accounts roles.
+- Purchase orders, invoices, S3 uploads, GitHub Actions, and a generated invoice PDF are outside the required core scope and are not implemented.
+- Render free services can take time to wake after inactivity.
+
 ---
 
 ## 🏗️ Architecture Overview
