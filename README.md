@@ -8,6 +8,7 @@ Includes **JWT Authentication**, **Role-Based Access Control (RBAC)** across 4 r
 
 - **Source code:** [GitHub repository](https://github.com/samikhya56/MINI_ERP_CRM)
 - **Live backend health check:** [Render API health](https://mini-erp-backend-g6dc.onrender.com/api/v1/health)
+- **Complete project documentation:** [docs/PROJECT_DOCUMENTATION.md](docs/PROJECT_DOCUMENTATION.md)
 - **API documentation:** [docs/API.md](docs/API.md)
 - **Live frontend:** [Render Static Site](https://mini-erp-frontend-wx2p.onrender.com)
 
