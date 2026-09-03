@@ -8,7 +8,9 @@ import type {
   Pagination,
 } from '../types';
 
-const API_BASE = '/api/v1';
+// Vite proxies this path during local development. In production, set
+// VITE_API_BASE_URL to the public URL of the deployed backend.
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('erp_token');

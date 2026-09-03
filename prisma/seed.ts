@@ -4,6 +4,12 @@ import * as bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
+  // Only initialize a new database; never erase data on a service restart.
+  if (await prisma.user.count()) {
+    console.log('Database already contains data. Skipping seed.');
+    return;
+  }
+
   console.log('🌱 Starting database seed process...');
 
   // Clean existing data in reverse order of dependencies
